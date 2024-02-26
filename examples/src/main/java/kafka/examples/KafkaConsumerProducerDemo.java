@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit;
  * If you are using IntelliJ IDEA, the above arguments should be put in `Modify Run Configuration - Program Arguments`.
  * You can also set an output log file in `Modify Run Configuration - Modify options - Save console output to file` to
  * record all the log output together.
+ *
+ * <p>添加命令行参数：1 或者 1 sync进行测试
  */
 public class KafkaConsumerProducerDemo {
     public static final String TOPIC_NAME = "my-topic";
@@ -48,7 +50,7 @@ public class KafkaConsumerProducerDemo {
             boolean isAsync = args.length == 1 || !args[1].trim().equalsIgnoreCase("sync");
 
             // stage 1: clean any topics left from previous runs
-            Utils.recreateTopics(KafkaProperties.BOOTSTRAP_SERVERS, -1, TOPIC_NAME);
+//            Utils.recreateTopics(KafkaProperties.BOOTSTRAP_SERVERS, -1, TOPIC_NAME);
             CountDownLatch latch = new CountDownLatch(2);
 
             // stage 2: produce records to topic1
@@ -61,7 +63,7 @@ public class KafkaConsumerProducerDemo {
                 "consumer", KafkaProperties.BOOTSTRAP_SERVERS, TOPIC_NAME, GROUP_NAME, Optional.empty(), false, numRecords, latch);
             consumerThread.start();
 
-            if (!latch.await(5, TimeUnit.MINUTES)) {
+            if (!latch.await(1, TimeUnit.MINUTES)) {
                 Utils.printErr("Timeout after 5 minutes waiting for termination");
                 producerThread.shutdown();
                 consumerThread.shutdown();
